@@ -45,7 +45,7 @@ export default function TopCoins() {
         >
           <span>{coin.market_cap_rank}</span>
           <span className="flex items-center gap-4">
-            <img src={coin.image} width={36} height={36}/>
+            <img src={coin.image} alt="" width={36} height={36}/>
             <span>
               {coin.name}
               <span className="uppercase ml-2 text-gray-500">({coin.symbol})</span>
