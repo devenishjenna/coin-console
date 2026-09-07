@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { getTopCoins } from "../api/coingecko";
+import { formatCurrency } from "../utils/format";
 import type { Coin } from "../types/coin";
 
 // displays list of top 10 coins
@@ -48,9 +49,9 @@ export default function TopCoins() {
                   <span className="uppercase ml-2 text-gray-500">({coin.symbol})</span>
                 </span>
               </span>
-              <span className="font-semibold">R{coin.current_price.toLocaleString()}</span>
-              <span className="font-semibold">R{coin.low_24h.toLocaleString()}</span>
-              <span className="font-semibold">R{coin.high_24h.toLocaleString()}</span>
+              <span className="font-semibold">{formatCurrency(coin.current_price)}</span>
+              <span className="font-semibold">{formatCurrency(coin.low_24h)}</span>
+              <span className="font-semibold">{formatCurrency(coin.high_24h)}</span>
               <span className="text-xs">{new Date(coin.last_updated).toLocaleString()}</span>
             </Link>
           ))}
