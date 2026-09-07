@@ -1,75 +1,60 @@
-# React + TypeScript + Vite
+# Coin Console
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+A cryptocurrency dashboard showing live prices from the [CoinGecko API](https://www.coingecko.com/en/api),
+with all values displayed in South African Rand.
 
-Currently, two official plugins are available:
+Built with React, TypeScript, Vite and Tailwind CSS.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+**Live demo:** https://coin-console-tan.vercel.app/
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- **Dashboard** — the top 10 cryptocurrencies by market cap, highest to lowest,
+  showing rank, price, 24 hour low and high, and when the data was last updated.
+- **Coin details** — click any coin for market cap, fully diluted valuation,
+  trading volume, 24 hour price and market cap movement, and supply figures.
+- All prices in ZAR, formatted for the `en-ZA` locale.
 
-## Expanding the ESLint configuration
+## Getting started
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+Requires Node 20 or later (developed on v24.17.0).
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
-
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-
+```bash
+npm install
+npm run dev
 ```
 
-You can also install [eslint-plugin-react-x](https://npmx.dev/package/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://npmx.dev/package/eslint-plugin-react-dom) for React-specific lint rules:
+No API key or environment variables are needed — the app uses CoinGecko's free
+public API. Please note, the free tier is rate limited so navigating very rapidly between coins may briefly return an error.
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
-
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+## Project structure
 
 ```
+src/
+├── api/          CoinGecko requests
+├── components/   Shared UI (PageContainer, Loading, ErrorMessage, StatCard)
+├── pages/        TopCoins (dashboard) and CoinDetails
+├── types/        Coin interface matching the API response
+└── utils/        Currency, number and percentage formatting
+```
+
+Routing is handled by React Router: `/` renders the dashboard, `/:id` renders
+the details page for a coin.
+
+## Notes on the implementation
+
+**Nullable API fields.** CoinGecko returns `null` for several numeric fields on
+recently listed coins — `price_change_24h` and `market_cap_change_24h` among
+them. The `Coin` interface models these as `number | null` so TypeScript catches
+unguarded access at compile time rather than at runtime.
+
+**Formatting.** All currency, number and percentage formatting goes through
+`utils/format.ts`, which returns an em dash for missing values instead of
+throwing. `formatCurrency` uses `Intl.NumberFormat` with the `en-ZA` locale,
+which is what renders the `R` symbol correctly, and takes an optional currency
+code so support for other comparison currencies can be added without touching
+call sites.
+
+**Components.** Markup repeated across the two pages is extracted into
+`components/` — the page wrapper, loading and error states, and the stat cards
+on the details page.
