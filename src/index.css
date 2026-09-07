@@ -1,1 +1,11 @@
 @import "tailwindcss";
+
+/* light only - stops dark mode browsers pairing black text with a dark backdrop */
+:root {
+  color-scheme: light;
+}
+
+body {
+  background-color: white;
+  color: black;
+}
