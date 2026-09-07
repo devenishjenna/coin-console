@@ -48,12 +48,7 @@ recently listed coins — `price_change_24h` and `market_cap_change_24h` among
 them. The `Coin` interface models these as `number | null` so TypeScript catches
 unguarded access at compile time rather than at runtime.
 
-**Formatting.** All currency, number and percentage formatting goes through
-`utils/format.ts`, which returns an em dash for missing values instead of
-throwing. `formatCurrency` uses `Intl.NumberFormat` with the `en-ZA` locale,
-which is what renders the `R` symbol correctly, and takes an optional currency
-code so support for other comparison currencies can be added without touching
-call sites.
+**Formatting.** formatCurrency uses Intl.NumberFormat with the en-ZA locale, which is what renders the R symbol correctly, and takes an optional currency code. Supporting other comparison currencies would also mean parameterising vs_currency in api/coingecko.ts, which is currently fixed to zar.
 
 **Components.** Markup repeated across the two pages is extracted into
 `components/` — the page wrapper, loading and error states, and the stat cards
