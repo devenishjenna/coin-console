@@ -18,24 +18,43 @@ export default function TopCoins() {
   }, []);
 
   // while getTopCoins runs, we display loading
-  if (loading) return <p>Loading...</p>;
+  if (loading) return <p className="text-white p-12">Loading...</p>;
   // getTopCoins has failed
-  if (error) return <p>Error: {error}</p>;
+  if (error) return <p className="text-white p-12">Error: {error}</p>;
 
   return (
-    <div>
-      <h1>Top 10 Cryptocurrencies</h1>
-      <ul>
-        {coins.map((coin) => (
-          <li key={coin.id}>
-            <Link to={`/${coin.id}`}>
-              <img src={coin.image} alt={coin.name} width={24} height={24} />
-              <span>{coin.market_cap_rank}. {coin.name} ({coin.symbol.toUpperCase()})</span>
-              <span>R{coin.current_price.toLocaleString()}</span>
+    <div className="min-h-screen px-6 py-12">
+      <div className="max-w-6xl mx-auto">
+        <h1 className="text-3xl font-semibold mb-8">Top Coins by Market Cap</h1>
+          <div className="grid grid-cols-[1fr_3fr_1fr_1fr_1fr_2fr] gap-3 p-4 text-sm uppercase border-b">
+            <span>Rank</span>
+            <span>Coin</span>
+            <span>Price</span>
+            <span>Low 24h</span>
+            <span>High 24h</span>
+            <span>Last Updated</span>
+          </div>
+          {coins.map((coin) => (
+            <Link
+              to={`/${coin.id}`}
+              key={coin.id}
+              className="grid grid-cols-[1fr_3fr_1fr_1fr_1fr_2fr] items-center gap-3 p-4 border-b hover:bg-blue-300/20"
+            >
+              <span>{coin.market_cap_rank}</span>
+              <span className="flex items-center gap-4">
+                <img src={coin.image} width={36} height={36}/>
+                <span>
+                  {coin.name}
+                  <span className="uppercase ml-2 text-gray-500">({coin.symbol})</span>
+                </span>
+              </span>
+              <span className="font-semibold">R{coin.current_price.toLocaleString()}</span>
+              <span className="font-semibold">R{coin.low_24h.toLocaleString()}</span>
+              <span className="font-semibold">R{coin.high_24h.toLocaleString()}</span>
+              <span className="text-xs">{new Date(coin.last_updated).toLocaleString()}</span>
             </Link>
-          </li>
-        ))}
-      </ul>
+          ))}
+      </div>
     </div>
   );
 }
