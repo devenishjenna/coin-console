@@ -54,7 +54,7 @@ export default function CoinDetails() {
 
       <div className="flex items-center gap-4 mb-8 mt-8">
         <span className="text-3xl text-gray-500">#{coin.market_cap_rank}</span>
-        <img src={coin.image} width={48} height={48} />
+        <img src={coin.image} alt="" width={48} height={48} />
         <h1 className="text-3xl font-semibold">
           {coin.name}
           <span className="uppercase text-gray-500 ml-2">({coin.symbol})</span>
