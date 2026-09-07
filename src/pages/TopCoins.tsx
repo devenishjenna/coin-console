@@ -53,13 +53,15 @@ export default function TopCoins() {
         <span className="hidden lg:block">High 24h</span>
         <span className="hidden lg:block">Last Updated</span>
       </div>
-      {coins.map((coin) => (
+      {coins.map((coin, index) => (
         <Link
           to={`/${coin.id}`}
           key={coin.id}
           className={`${COLUMNS} items-center border-b hover:bg-blue-300/20`}
         >
-          <span>{coin.market_cap_rank}</span>
+          {/* position in this list, not coin.market_cap_rank - the api ties
+              ranks, so two rows can both come back as 9 with no 10 */}
+          <span>{index + 1}</span>
           <span className="flex items-center gap-4">
             <img src={coin.image} alt="" width={36} height={36}/>
             <span>
