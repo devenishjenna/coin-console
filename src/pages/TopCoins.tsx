@@ -18,19 +18,29 @@ export default function TopCoins() {
   const [coins, setCoins] = useState<Coin[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // bumping this re-runs the effect, which is how the error screen retries
+  const [attempt, setAttempt] = useState(0);
 
-  // run once after first render
+  // runs after first render, and again on every retry
   useEffect(() => {
     getTopCoins()
       .then(setCoins)
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, []);
+  }, [attempt]);
+
+  // reset here rather than in the effect - setState inside an effect body is
+  // flagged by react-hooks/set-state-in-effect
+  const retry = () => {
+    setLoading(true);
+    setError(null);
+    setAttempt((n) => n + 1);
+  };
 
   // while getTopCoins runs, we display loading
   if (loading) return <Loading />;
   // getTopCoins has failed
-  if (error) return <ErrorMessage message={error} />;
+  if (error) return <ErrorMessage message={error} onRetry={retry} />;
 
   return (
     <PageContainer>
