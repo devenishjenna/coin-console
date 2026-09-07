@@ -20,12 +20,28 @@ Built with React, TypeScript, Vite and Tailwind CSS.
 Requires Node 20 or later (developed on v24.17.0).
 
 ```bash
+git clone https://github.com/devenishjenna/coin-console.git
+cd coin-console
 npm install
+```
+
+Development:
+
+```bash
 npm run dev
 ```
 
+Production build:
+
+```bash
+npm run build
+npm run preview
+```
+
 No API key or environment variables are needed — the app uses CoinGecko's free
-public API. Please note, the free tier is rate limited so navigating very rapidly between coins may briefly return an error.
+public API. Please note, the free tier is rate limited, so navigating very
+rapidly between coins will show a rate-limit message with a **Try again**
+button. The limit clears within about a minute.
 
 ## Project structure
 
