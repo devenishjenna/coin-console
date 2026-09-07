@@ -15,20 +15,30 @@ export default function CoinDetails() {
   const [coin, setCoin] = useState<Coin | null>(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  // bumping this re-runs the effect, which is how the error screen retries
+  const [attempt, setAttempt] = useState(0);
 
-  // runs every time id changes
+  // runs every time id changes, and again on every retry
   useEffect(() => {
     if (!id) return; // dead code, needed to satisfy TS requirements
     getCoinById(id)
       .then(setCoin)
       .catch((err) => setError(err.message))
       .finally(() => setLoading(false));
-  }, [id]);
+  }, [id, attempt]);
+
+  // reset here rather than in the effect - setState inside an effect body is
+  // flagged by react-hooks/set-state-in-effect
+  const retry = () => {
+    setLoading(true);
+    setError(null);
+    setAttempt((n) => n + 1);
+  };
 
   // while getCoinById runs, we display loading
   if (loading) return <Loading />;
   // getCoinById has failed
-  if (error) return <ErrorMessage message={error} />;
+  if (error) return <ErrorMessage message={error} onRetry={retry} />;
   if (!coin) return null; // dead code, needed to satisfy TS requirements
 
   // stats for each coin
